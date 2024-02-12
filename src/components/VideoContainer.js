@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { YOUTUBE_API } from "../utils/constants";
 import VideoCard from "./VideoCard";
+import { Link } from "react-router-dom";
 
 const VideoContainer = () => {
   const [videos, setVideos] = useState(null);
@@ -19,9 +20,12 @@ const VideoContainer = () => {
   if (videos === null) return;
 
   return (
-    <div className="flex flex-wrap overflow-y-scroll">
+    <div className="flex flex-wrap overflow-scroll h-screen pb-16 justify-center items-center">
       {videos.map((video) => (
-        <VideoCard key={video.id} info={video} />
+        <Link to={"/watch?v=" + video.id} key={video.id}>
+          {" "}
+          <VideoCard info={video} />{" "}
+        </Link>
       ))}
     </div>
   );
