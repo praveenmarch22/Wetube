@@ -31,3 +31,9 @@ export const categories = [
   "Shows",
   "Trailers",
 ];
+
+export const YOUTUBE_SEARCH_API =
+  "https://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
+
+export const YOUTUBE_SEARCH_RESULTS =
+  "https://youtube.googleapis.com/youtube/v3/search?part=snippet&forMine=true&maxResults=25&q=fun&type=video&key=";
