@@ -1,3 +1,5 @@
+export const OFFSITE_CHAT_COUNT = 20;
+
 const API_KEY = "AIzaSyB694MF5nkadLYqZf28uT1bzmhW-wr1WRc";
 
 export const YOUTUBE_API =

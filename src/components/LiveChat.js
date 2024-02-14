@@ -19,11 +19,11 @@ const LiveChat = () => {
           message: getRandomPhrase(),
         })
       );
-    }, 500);
+    }, 1000);
   }, []);
 
   return (
-    <div className="h-[500px] border border-black p-2 ml-2 rounded-lg w-full flex pr-6 mr-6 mt-5 overflow-y-scroll flex-col-reverse">
+    <div className="h-[550px] border border-black p-2 ml-2 rounded-lg w-full flex pr-6 mr-6 mt-5 overflow-y-scroll flex-col-reverse">
       {chatMessages.map((messageInfo, index) => (
         <ChatMessage
           name={messageInfo.name}
