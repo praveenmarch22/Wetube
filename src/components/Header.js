@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addSearchQuery, toggleSideBarView } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
@@ -7,6 +7,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const inputRef = useRef(null);
+  const suggestionsRef = useRef(null);
 
   const [searchSuggestions, setSearchSuggestions] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -16,7 +19,11 @@ const Header = () => {
   const cache = useSelector((store) => store.search);
 
   const handleSearchdata = (item) => {
+    setShowSuggestions(false);
+    setSearchQuery(item);
     dispatch(addSearchQuery(item));
+
+    navigate("/search");
   };
 
   const handleSideBarToggle = () => {
@@ -42,6 +49,25 @@ const Header = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        inputRef.current &&
+        !inputRef.current.contains(event.target) &&
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   const handleSuggestionsContainerClick = () => {
     setShowSuggestions(true);
   };
@@ -63,7 +89,7 @@ const Header = () => {
           />
         </Link>
       </div>
-      <div className="col-span-8 mx-auto pr-8">
+      <div className="col-span-8 mx-auto pr-8" ref={inputRef}>
         <input
           type="text"
           className="w-[500px]  px-5 py-2 rounded-bl-3xl rounded-tl-3xl border-2 border-gray-400 focus:border-black"
@@ -71,7 +97,6 @@ const Header = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setShowSuggestions(false)}
         />
         <button className="w-[60px] absolute  px-5 py-2 rounded-br-3xl rounded-tr-3xl border-2 border-gray-400 mr-10 ">
           <svg
@@ -92,6 +117,7 @@ const Header = () => {
 
         {showSuggestions && (
           <div
+            ref={suggestionsRef}
             className=" fixed bg-white w-[500px] p-2 rounded-lg shadow-lg"
             onClick={handleSuggestionsContainerClick}
           >
