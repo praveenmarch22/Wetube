@@ -5,12 +5,39 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import appStore from "./utils/appStore";
+import MainContainer from "./components/MainContainer";
+import WatchPage from "./components/WatchPage";
+import SearchResults from "./components/SearchResults";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    children: [
+      {
+        path: "/",
+        element: <MainContainer />,
+      },
+      {
+        path: "/watch",
+        element: <WatchPage />,
+      },
+      {
+        path: "/search",
+        element: <SearchResults />,
+      },
+    ],
+  },
+]);
 root.render(
   <React.StrictMode>
     <Provider store={appStore}>
-      <App />
+      <RouterProvider router={appRouter}>
+        <App />
+      </RouterProvider>
     </Provider>
   </React.StrictMode>
 );

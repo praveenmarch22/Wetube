@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleSideBarView } from "../utils/appSlice";
+import { addSearchQuery, toggleSideBarView } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
 import { storeCache } from "../utils/searchSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,12 +15,15 @@ const Header = () => {
 
   const cache = useSelector((store) => store.search);
 
+  const handleSearchdata = (item) => {
+    dispatch(addSearchQuery(item));
+  };
+
   const handleSideBarToggle = () => {
     dispatch(toggleSideBarView());
   };
 
   const getSerchSuggestions = async () => {
-    console.log("Api - " + searchQuery);
     const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
     const json = await data.json();
     setSearchSuggestions(json[1]);
@@ -38,6 +42,10 @@ const Header = () => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
+  const handleSuggestionsContainerClick = () => {
+    setShowSuggestions(true);
+  };
+
   return (
     <div className="grid grid-flow-col grid-cols-12 p-2 pb-4 shadow-lg fixed top-0 left-0 w-full z-40 bg-white">
       <div className="flex col-span-2 ml-2 mt-2">
@@ -47,11 +55,13 @@ const Header = () => {
           src="https://cdn.icon-icons.com/icons2/2385/PNG/512/hamburger_menu_icon_144302.png"
           onClick={handleSideBarToggle}
         />
-        <img
-          className="h-7 ml-6 mt-[2px] cursor-pointer"
-          alt="Youutbe logo"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlHMUb8U4VeW2y-RflH7U7Yp0tsx1hJv0PwQ&usqp=CAU"
-        />
+        <Link to={"/"}>
+          <img
+            className="h-7 ml-6 mt-[2px] cursor-pointer"
+            alt="Youutbe logo"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlHMUb8U4VeW2y-RflH7U7Yp0tsx1hJv0PwQ&usqp=CAU"
+          />
+        </Link>
       </div>
       <div className="col-span-8 mx-auto pr-8">
         <input
@@ -81,17 +91,23 @@ const Header = () => {
         </button>
 
         {showSuggestions && (
-          <div className=" fixed bg-white w-[500px] p-2 rounded-lg shadow-lg">
-            <ul>
+          <div
+            className=" fixed bg-white w-[500px] p-2 rounded-lg shadow-lg"
+            onClick={handleSuggestionsContainerClick}
+          >
+            <div>
               {searchSuggestions.map((item, index) => (
-                <li
+                <h1
                   className="p-1 cursor-pointer hover:bg-slate-200 rounded-lg"
                   key={index}
+                  onClick={() => {
+                    handleSearchdata(item);
+                  }}
                 >
                   🔍 {item}
-                </li>
+                </h1>
               ))}
-            </ul>
+            </div>
           </div>
         )}
       </div>

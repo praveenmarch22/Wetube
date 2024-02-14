@@ -4,6 +4,7 @@ const appSlice = createSlice({
   name: "app",
   initialState: {
     isSideBarOpen: true,
+    searchQuery: "",
   },
   reducers: {
     toggleSideBarView: (state, action) => {
@@ -12,9 +13,13 @@ const appSlice = createSlice({
     closeSideBarView: (state, action) => {
       state.isSideBarOpen = false;
     },
+    addSearchQuery: (state, action) => {
+      state.searchQuery = action.payload;
+    },
   },
 });
 
-export const { toggleSideBarView, closeSideBarView } = appSlice.actions;
+export const { toggleSideBarView, closeSideBarView, addSearchQuery } =
+  appSlice.actions;
 
 export default appSlice.reducer;
